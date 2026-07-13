@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>African Gameskin Group — Management Accounts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241C16;
+    --ink-soft:#5C5248;
+    --paper:#FBF9F6;
+    --panel:#FFFFFF;
+    --line:#E4DED4;
+    --hide:#6E3C22;
+    --hide-deep:#4A2A18;
+    --gold:#A9782F;
+    --good:#3E6B4F;
+    --bad:#A23E3E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:56px 28px 80px;
+  }
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:16px;
+    border-bottom:2px solid var(--hide);
+    padding-bottom:24px;
+    margin-bottom:32px;
+  }
+  .brand-eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:38px;
+    line-height:1.05;
+    margin:0;
+    color:var(--hide-deep);
+  }
+
+  /* Month toggle */
+  .month-toggle{
+    display:flex;
+    gap:6px;
+    margin-bottom:40px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:5px;
+    width:fit-content;
+  }
+  .month-btn{
+    appearance:none;
+    border:none;
+    background:transparent;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink-soft);
+    padding:9px 20px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .month-btn:hover{color:var(--ink);}
+  .month-btn.active{
+    background:var(--hide);
+    color:#fff;
+  }
+
+  section{margin-bottom:48px;}
+  .section-title{
+    font-family:'Fraunces',serif;
+    font-size:14px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-title::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:22px 22px 20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:4px;
+    background:var(--hide);
+  }
+  .card.bad::before{background:var(--bad);}
+  .card.good::before{background:var(--good);}
+  .card-label{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+  }
+  .card-value{
+    font-family:'Fraunces',serif;
+    font-size:28px;
+    font-weight:600;
+    color:var(--ink);
+    margin:0;
+    line-height:1.1;
+  }
+  .card-value.bad{color:var(--bad);}
+  .card-value.good{color:var(--good);}
+  .card-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:8px 0 0;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  th,td{
+    text-align:left;
+    padding:12px 16px;
+    font-size:14px;
+    border-bottom:1px solid var(--line);
+  }
+  th{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    font-weight:600;
+    background:#F4EFE7;
+  }
+  td.num, th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr:last-child td{border-bottom:none;}
+  .delta-up{color:var(--good);font-weight:600;}
+  .delta-down{color:var(--bad);font-weight:600;}
+  .notes{
+    background:#F4EFE7;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:18px 20px;
+  }
+  .notes ul{margin:0;padding-left:18px;}
+  .notes li{margin-bottom:6px;font-size:14px;color:var(--ink-soft);}
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    border-top:1px solid var(--line);
+    padding-top:20px;
+  }
+  @media (max-width:720px){
+    .cards{grid-template-columns:1fr 1fr;}
+    header{flex-direction:column;align-items:flex-start;}
+    .month-toggle{width:100%;overflow-x:auto;}
+  }
+  @media (max-width:480px){
+    .cards{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="brand-eyebrow">African Gameskin Group (Pty) Ltd</p>
+      <h1>Management Accounts</h1>
+    </div>
+  </header>
+
+  <div class="month-toggle" id="monthToggle"></div>
+
+  <section>
+    <p class="section-title">Month highlights</p>
+    <div class="cards" id="monthCards"></div>
+  </section>
+
+  <section>
+    <p class="section-title">Year to date</p>
+    <div class="cards" id="ytdCards"></div>
+  </section>
+
+  <section>
+    <p class="section-title">Sales by branch (m² sold)</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Branch</th>
+          <th class="num" id="thisMonthLabel">This month</th>
+          <th class="num" id="prevMonthLabel">Prior month</th>
+          <th class="num">Change</th>
+        </tr>
+      </thead>
+      <tbody id="branchRows"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <p class="section-title">Notes</p>
+    <div class="notes">
+      <ul id="notesList"></ul>
+    </div>
+  </section>
+
+  <footer id="footerNote">
+    Generated from internal management accounts · For internal use only
+  </footer>
+
+</div>
+
+<script>
+const R = n => 'R ' + Math.round(n).toLocaleString('en-ZA');
+const Rsigned = n => (n < 0 ? 'R (' + Math.abs(Math.round(n)).toLocaleString('en-ZA') + ')' : R(n));
+const pct = n => (n * 100).toFixed(1) + '%';
+
+const data = {
+  "March 2026": {
+    label: "March 2026",
+    prevLabel: "Feb 2026",
+    month: { turnover: 8796434.51, cos: 7443520.55, gp: 1352913.96, gpPct: 0.1538, otherIncome: 803916.31, expenses: 988310.05, expPct: 0.1124, netProfit: 1168520.22, netPct: 0.1328 },
+    ytd:   { turnover: 8796434.51, gp: 1352913.96, gpPct: 0.1538, netProfit: 1168520.22, netPct: 0.1328 },
+    bank: { nedbank: 989367.23, cfc: 6759923.40, total: 7749290.63 },
+    debtors: { total: 10172038.85, current: 5557631.28 },
+    creditors: { total: 1397414.22 },
+    stock: { total: 25627566.39 },
+    branches: [
+      { name: "Durban", thisM: 2544.32, prevM: 2823 },
+      { name: "JHB", thisM: 10150.71, prevM: 10084.77 },
+      { name: "Cape Town", thisM: 12223.94, prevM: 17391 },
+      { name: "Total", thisM: 24918.97, prevM: 30298.77 }
+    ],
+    top10Pct: 0.3163,
+    creditNotes: { count: 119, pctOfSales: "8%", value: 673563.19 },
+    extraNotes: []
+  },
+  "April 2026": {
+    label: "April 2026",
+    prevLabel: "March 2026",
+    month: { turnover: 8083645.07, cos: 6732664.74, gp: 1350980.33, gpPct: 0.1671, otherIncome: -26096.81, expenses: 921170.66, expPct: 0.1140, netProfit: 403712.86, netPct: 0.0499 },
+    ytd:   { turnover: 16879489.60, gp: 2667503.96, gpPct: 0.1580, netProfit: 1549517.01, netPct: 0.0918 },
+    bank: { nedbank: 2005409.54, cfc: 6710953.67, total: 8716363.21 },
+    debtors: { total: 10321553.04, current: 4845365.15 },
+    creditors: { total: 2232622.33 },
+    stock: { total: 25469457.78 },
+    branches: [
+      { name: "Durban", thisM: 2416, prevM: 2544.32 },
+      { name: "JHB", thisM: 7996, prevM: 10150.71 },
+      { name: "Cape Town", thisM: 13162, prevM: 12223.94 },
+      { name: "Total", thisM: 23574, prevM: 24918.97 }
+    ],
+    top10Pct: 0.2688,
+    creditNotes: { count: 108, pctOfSales: "6%", value: 491161.49 },
+    extraNotes: [
+      "Other income was negative this month (-R26,097).",
+      "30-day creditors reflect a credit balance of -R551,065."
+    ]
+  },
+  "May 2026": {
+    label: "May 2026",
+    prevLabel: "April 2026",
+    month: { turnover: 9328928.88, cos: 7958547.22, gp: 1370381.66, gpPct: 0.1469, otherIncome: 280166.36, expenses: 953750.41, expPct: 0.1022, netProfit: 696797.61, netPct: 0.0747 },
+    ytd:   { turnover: 26210086.03, gp: 3354553.17, gpPct: 0.1280, netProfit: 1372650.63, netPct: 0.0524 },
+    bank: { nedbank: 1922533.49, cfc: 7298871.14, total: 9221404.63 },
+    debtors: { total: 9977276.95, current: 5628561.91 },
+    creditors: { total: 2599600.05 },
+    stock: { total: 26440667.42 },
+    branches: [
+      { name: "Durban", thisM: 2702, prevM: 2416 },
+      { name: "JHB", thisM: 9663, prevM: 7996 },
+      { name: "Cape Town", thisM: 14573, prevM: 13162 },
+      { name: "Total", thisM: 26938, prevM: 23574 }
+    ],
+    top10Pct: 0.3444,
+    creditNotes: { count: 93, pctOfSales: "5%", value: 482483 },
+    extraNotes: [
+      "Cost of sales adjusted to take out the sheep lining invoice."
+    ]
+  },
+  "June 2026": {
+    label: "June 2026",
+    prevLabel: "May 2026",
+    month: { turnover: 9592256.49, cos: 9049304.04, gp: 542952.45, gpPct: 0.0566, otherIncome: 397357.21, expenses: 952854.61, expPct: 0.0993, netProfit: -12544.95, netPct: -0.0013 },
+    ytd:   { turnover: 35799257.82, gp: 3730000.50, gpPct: 0.1042, netProfit: 1174284.88, netPct: 0.0328 },
+    bank: { nedbank: 2256051.75, cfc: 7388251.25, total: 9644303 },
+    debtors: { total: 9500330.96, current: 5750509.48 },
+    creditors: { total: 3246489.66 },
+    stock: { total: 28252761.88 },
+    branches: [
+      { name: "Durban", thisM: 2362, prevM: 2702 },
+      { name: "JHB", thisM: 9987, prevM: 9663 },
+      { name: "Cape Town", thisM: 15762, prevM: 14573 },
+      { name: "Total", thisM: 28111, prevM: 26938 }
+    ],
+    top10Pct: 0.3360,
+    creditNotes: { count: 115, pctOfSales: "5%", value: 512349.12 },
+    extraNotes: [
+      "Fusion Leather delivered approximately R700k of stock in the final three days of the month."
+    ]
+  }
+};
+
+const months = Object.keys(data);
+let current = "June 2026";
+
+function renderToggle(){
+  const el = document.getElementById('monthToggle');
+  el.innerHTML = months.map(m =>
+    `<button class="month-btn${m === current ? ' active' : ''}" data-month="${m}">${m.split(' ')[0]}</button>`
+  ).join('');
+  el.querySelectorAll('.month-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      current = btn.getAttribute('data-month');
+      render();
+    });
+  });
+}
+
+function render(){
+  renderToggle();
+  const d = data[current];
+
+  document.getElementById('monthCards').innerHTML = `
+    <div class="card">
+      <p class="card-label">Turnover — ${d.label}</p>
+      <p class="card-value">${R(d.month.turnover)}</p>
+    </div>
+    <div class="card ${d.month.gp >= 0 ? 'good' : 'bad'}">
+      <p class="card-label">Gross Profit — ${d.label}</p>
+      <p class="card-value ${d.month.gp >= 0 ? 'good' : 'bad'}">${Rsigned(d.month.gp)}</p>
+      <p class="card-sub">${pct(d.month.gpPct)} margin</p>
+    </div>
+    <div class="card ${d.month.netProfit >= 0 ? 'good' : 'bad'}">
+      <p class="card-label">Net Profit — ${d.label}</p>
+      <p class="card-value ${d.month.netProfit >= 0 ? 'good' : 'bad'}">${Rsigned(d.month.netProfit)}</p>
+      <p class="card-sub">${pct(d.month.netPct)} margin</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Bank Balance</p>
+      <p class="card-value">${R(d.bank.total)}</p>
+      <p class="card-sub">Nedbank ${R(d.bank.nedbank)} + CFC ${R(d.bank.cfc)}</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Debtors</p>
+      <p class="card-value">${R(d.debtors.total)}</p>
+      <p class="card-sub">Current: ${R(d.debtors.current)} (${pct(d.debtors.current / d.debtors.total)})</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Creditors</p>
+      <p class="card-value">${R(d.creditors.total)}</p>
+      <p class="card-sub">Stock on hand: ${R(d.stock.total)}</p>
+    </div>
+  `;
+
+  document.getElementById('ytdCards').innerHTML = `
+    <div class="card">
+      <p class="card-label">Turnover — YTD</p>
+      <p class="card-value">${R(d.ytd.turnover)}</p>
+    </div>
+    <div class="card ${d.ytd.gp >= 0 ? 'good' : 'bad'}">
+      <p class="card-label">Gross Profit — YTD</p>
+      <p class="card-value ${d.ytd.gp >= 0 ? 'good' : 'bad'}">${Rsigned(d.ytd.gp)}</p>
+      <p class="card-sub">${pct(d.ytd.gpPct)} margin</p>
+    </div>
+    <div class="card ${d.ytd.netProfit >= 0 ? 'good' : 'bad'}">
+      <p class="card-label">Net Profit — YTD</p>
+      <p class="card-value ${d.ytd.netProfit >= 0 ? 'good' : 'bad'}">${Rsigned(d.ytd.netProfit)}</p>
+      <p class="card-sub">${pct(d.ytd.netPct)} margin</p>
+    </div>
+  `;
+
+  document.getElementById('thisMonthLabel').textContent = d.label;
+  document.getElementById('prevMonthLabel').textContent = d.prevLabel;
+
+  document.getElementById('branchRows').innerHTML = d.branches.map(b => {
+    const change = b.prevM ? ((b.thisM - b.prevM) / b.prevM) : 0;
+    const cls = change >= 0 ? 'delta-up' : 'delta-down';
+    const sign = change >= 0 ? '+' : '';
+    const isTotal = b.name === 'Total';
+    return `<tr>
+      <td>${isTotal ? '<strong>' + b.name + '</strong>' : b.name}</td>
+      <td class="num">${isTotal ? '<strong>' : ''}${b.thisM.toLocaleString('en-ZA')}${isTotal ? '</strong>' : ''}</td>
+      <td class="num">${isTotal ? '<strong>' : ''}${b.prevM.toLocaleString('en-ZA')}${isTotal ? '</strong>' : ''}</td>
+      <td class="num ${cls}">${sign}${(change * 100).toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+
+  const baseNotes = [
+    `Top 10 customers account for ${pct(d.top10Pct)} of ${d.label} sales.`,
+    `${d.creditNotes.count} credit notes issued in ${d.label.split(' ')[0]} (${d.creditNotes.pctOfSales} of sales, ${R(d.creditNotes.value)}).`,
+    `Total stock on hand: ${R(d.stock.total)}.`
+  ];
+  document.getElementById('notesList').innerHTML = baseNotes.concat(d.extraNotes || [])
+    .map(n => `<li>${n}</li>`).join('');
+
+  document.getElementById('footerNote').textContent =
+    `Generated from internal management accounts · ${d.label} · For internal use only`;
+}
+
+render();
+</script>
+</body>
+</html>
